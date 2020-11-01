@@ -4,3 +4,6 @@
 It works only on Linux with the panels/docks that support libunity such as KDE Plasma or Dash to Dock extension for GNOME.
 
 ![](screenshot.png)
+
+## Install
+Please check the official add-on web page: https://ankiweb.net/shared/info/901237400
