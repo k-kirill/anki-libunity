@@ -3,10 +3,6 @@ from aqt import gui_hooks
 from PyQt5 import QtDBus, QtCore
 
 
-def callback(card):
-    set_progress()
-
-
 def set_progress():
     due_card_count = len(mw.col.find_cards("is:new or is:due"))
     studied_card_count = len(mw.col.find_cards("rated:1"))
@@ -25,5 +21,6 @@ def set_progress():
 
 
 gui_hooks.main_window_did_init.append(set_progress)
+gui_hooks.sync_did_finish.append(set_progress)
 gui_hooks.reviewer_will_end.append(set_progress)
-gui_hooks.reviewer_did_show_question.append(callback)
+gui_hooks.reviewer_did_show_question.append(lambda _: set_progress())
