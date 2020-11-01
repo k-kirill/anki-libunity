@@ -20,7 +20,8 @@ def set_progress():
     bus.send(signal)
 
 
-gui_hooks.main_window_did_init.append(set_progress)
-gui_hooks.sync_did_finish.append(set_progress)
-gui_hooks.reviewer_will_end.append(set_progress)
+gui_hooks.collection_did_load.append(lambda _: set_progress())
 gui_hooks.reviewer_did_show_question.append(lambda _: set_progress())
+gui_hooks.reviewer_will_end.append(set_progress)
+gui_hooks.sync_did_finish.append(set_progress)
+
