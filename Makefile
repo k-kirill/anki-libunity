@@ -4,8 +4,8 @@ TGT = $(NAME).ankiaddon
 
 all: $(TGT)
 
-$(TGT): $(NAME)/__init__.py
-	zip -j $@ $<
+$(TGT): $(NAME)/__init__.py $(NAME)/config.json
+	zip -j $@ $^
 
 clean:
 	rm -rvf $(TGT)
