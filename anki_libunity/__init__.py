@@ -5,7 +5,7 @@ from PyQt5 import QtDBus, QtCore
 
 def set_progress():
     global app_name
-    due_card_count = len(mw.col.find_cards("is:new or is:due"))
+    due_card_count = len(mw.col.find_cards("is:due"))
     studied_card_count = len(mw.col.find_cards("rated:1"))
     divisor = studied_card_count + due_card_count
     if divisor == 0:
@@ -30,7 +30,7 @@ def send_notification():
     global app_name
     global notification_id
     global saved_due_card_count
-    due_card_count = len(mw.col.find_cards("is:new or is:due"))
+    due_card_count = len(mw.col.find_cards("is:due"))
     to_notify = due_card_count > saved_due_card_count
     saved_due_card_count = due_card_count
     if not to_notify:
