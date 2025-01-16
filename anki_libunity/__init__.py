@@ -1,11 +1,9 @@
-from aqt import mw
-from aqt import gui_hooks
-from PyQt5 import QtDBus, QtCore
-
+from aqt import mw, gui_hooks
+from PyQt6 import QtCore, QtDBus
 
 def set_progress():
     global app_name
-    due_card_count = len(mw.col.find_cards("is:new or is:due"))
+    due_card_count = len(mw.col.find_cards("-is:buried (is:new or is:due)"))
     studied_card_count = len(mw.col.find_cards("rated:1"))
     divisor = studied_card_count + due_card_count
     if divisor == 0:
@@ -21,7 +19,6 @@ def set_progress():
     signal = QtDBus.QDBusMessage.createSignal(path, interface, signal)
     signal << "application://" + app_name + ".desktop"
     qt_due_card_count = QtCore.QVariant(due_card_count)
-    qt_due_card_count.convert(QtCore.QVariant.LongLong)
     signal << {'count': qt_due_card_count, 'count-visible': True, 'progress': progress, 'progress-visible': True}
     bus.send(signal)
 
@@ -30,18 +27,18 @@ def send_notification():
     global app_name
     global notification_id
     global saved_due_card_count
-    due_card_count = len(mw.col.find_cards("is:new or is:due"))
+    due_card_count = len(mw.col.find_cards("-is:buried (is:new or is:due)"))
     to_notify = due_card_count > saved_due_card_count
     saved_due_card_count = due_card_count
     if not to_notify:
         return
     short_app_name = "Anki"
     qt_notification_id = QtCore.QVariant(notification_id)
-    qt_notification_id.convert(QtCore.QVariant.UInt)
+    qt_notification_id.convert(QtCore.QMetaType(QtCore.QMetaType.Type.UInt.value))
     icon = app_name
     title = "Anki"
     text = str(due_card_count) + (" card" if due_card_count == 1 else " cards") + " to study"
-    actions_list = QtDBus.QDBusArgument([], QtCore.QMetaType.QStringList)
+    actions_list = QtDBus.QDBusArgument([], QtCore.QMetaType.Type.QStringList.value)
     hint = {}
     time = -1
     item = "org.freedesktop.Notifications"
@@ -52,7 +49,7 @@ def send_notification():
         print("Not connected to dbus!")
     notify = QtDBus.QDBusInterface(item, path, interface, bus)
     if notify.isValid():
-        msg = notify.call(QtDBus.QDBus.AutoDetect, "Notify", short_app_name,
+        msg = notify.call(QtDBus.QDBus.CallMode.AutoDetect, "Notify", short_app_name,
                           qt_notification_id, icon, title, text,
                           actions_list, hint, time)
         if msg.errorName():
